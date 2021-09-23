@@ -1,0 +1,80 @@
+Design an eBay-like e-commerce auction site that will allow users to
+    post auction listings,
+    comment on those listings,
+    and add listings to a "watchlist".
+
+User class (which inherits from AbstractUser) already has fields for
+    username,
+    email,
+    password,
+    etc.,
+    (add more if needed)
+
+Need models to represent
+    auction listings,
+    bids,
+    comments,
+    auction categories (optional) (e.g. Fashion, Toys, Electronics, Home, etc.)
+
+CREATE LISTINGS
+    Users should be able to visit a page to create a new listing
+    They should be able to specify
+        a title for the listing
+        a text-based description
+        the starting bid
+    Optional fields for
+        image URL
+        category
+
+ACTIVE LISTINGS PAGE
+    Is the default landing route
+    For each active listing, show
+        the title,
+        description,
+        current price,
+        and photo (if is existent)
+
+LISTING PAGE
+    Clicking on a listing should take users to that listing's page
+    The listing page should show
+        all details about the listing including
+            the current price
+
+    If the user is signed in,
+        If the item is not on their watchlist
+            Allow it to be added
+        Else
+            Allow it to be removed
+
+        Allow user to bid on the item
+        Bid must be >= starting bid && > current bid
+            Show error otherwise
+
+        If user is signed in && is the listing creator
+            Allow them to be able to close the auction
+                Which means highest bidder wins auction && makes listing inactive
+
+        If user is signed in && is on a closed listing page && has won the auction
+            Show message saying winning condition
+
+        Signed in users should be able to make comments on listing page
+
+        All comments should be shown on the listing page
+
+WATCHLIST
+    If user is signed in
+        show link to a watchlist page which
+            displays links to all the listings in that user's watchlist
+            and clicking on any of them should go to the listing page
+
+CATEGORIES
+    Show links each category that takes to pages listing out all the listings of each category
+
+DJANGO ADMIN INTERFACE
+    Admin should be able to
+        View
+        Add
+        Edit
+        Delete
+            any listings, comments, and bids
+

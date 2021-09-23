@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Watchlist
+{% endblock %}
+
+{% block body %}
+<p>
+<h2>Watchlist</h2>
+</p>
+
+{% for listing in watchlist %}
+<p>
+<div class="card">
+    <p><img style="max-width: 25%; margin: 1%;" class="card-img-top" src="{{ listing.imageURL }}"
+            alt="Image for {{ listing.title }}"></p>
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{% url 'listing' title=listing.title listing_id=listing.id %}">
+                {{ listing.title }}
+            </a>
+        </h5>
+        <p class="text-muted" style="font-size: small;">
+            {% if listing.category %}
+            <i>{{ listing.category|capfirst }}</i>
+            {% else %}
+            <i>Uncategorized</i>
+            {% endif %}
+        </p>
+        <p class="card-text">
+            {{ listing.description }}
+        </p>
+        <p>
+            <b>${{ listing.price }}</b>
+        </p>
+        <p class="text-muted" style="font-size: x-small;">
+            Listed by: {{ listing.creator }}
+        </p>
+    </div>
+</div>
+</p>
+{% endfor %}
+{% endblock %}

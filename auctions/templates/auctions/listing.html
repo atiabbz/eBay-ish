@@ -1,0 +1,115 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+{{ listing.title }}
+{% endblock %}
+
+{% block body %}
+<div>
+<div class="card">
+    <div class="card-body">
+        <p><h2 class="card-title">{{ listing.title }}</h2></p>
+        <p><img style="max-width: 25%;" src="{{ listing.imageURL }}" alt="{{ listing.title }}"></p>
+        {% if listing.category %}
+            <p><b class="text-muted" style="font-size: small;">Category:</b> {{ listing.category|capfirst }}</p>
+        {% else %}
+            <p><b class="text-muted" style="font-size: small;">Category:</b> Uncategorized</p>
+        {% endif %}
+        <p><b class="text-muted" style="font-size: small;">Description:</b> {{ listing.description }}</p>
+        <p><b class="text-muted" style="font-size: small;">Created by:</b> {{ listing.creator }}</p>
+        <p><b class="text-muted" style="font-size: small;">Price:</b> ${{ listing.price }}</p>
+        <p><b class="text-muted" style="font-size: small;">Status:</b>{% if isActive %} Active{% else %} Closed{% endif %}</p>
+    </div>
+</div>
+
+{% if user.is_authenticated and isWinner %}
+<p><div class="alert alert-success" role="alert">
+    <p><h4 class="alert-heading">🎉 It's yours</h4></p>
+    <p>That was the winning bid!</p>
+</div></p>
+{% endif %}
+
+{% if not isActive and not isWinner %}
+<p><div class="alert alert-secondary" role="alert">
+    This listing is closed
+</div></p>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <p>
+    <form method="POST">
+        {% csrf_token %}
+        {% if isCreator and isActive %}
+            <input class="btn btn-outline-danger" type="submit" name="submit" value="🛑 Close">
+        {% endif %}
+
+        {% if isActive and not isCreator %}
+            {% if not isWatchlisted %}
+                <input class="btn btn-outline-warning" type="submit" name="submit" value="🧐 Watch">
+            {% else %}
+                <input class="btn btn-warning" type="submit" name="submit" value="😴 Unwatch">
+            {% endif %}
+        {% endif %}
+    </form>
+    </p>
+{% endif %}
+
+
+<div>
+    {% if isActive and user.is_authenticated and not isCreator %}
+    <div>
+        <p><h4>Bidding</h4></p>
+        {% if isValidBid %}
+        <p>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ✅ Bid placed successfully
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </p>
+        {% else %}
+        <p>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                ℹ Bid must be higher than current price
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </p>
+        {% endif %}
+        <p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ bidForm.as_p }}
+                <input class="btn btn-primary" name="submit" type="submit" value="Bid">
+            </form>
+        </p>
+    </div>
+    {% endif %}
+
+    <div>
+        <p><h4>Comments</h4></p>
+        {% for comment in allComments %}
+        <p><div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ comment.commenter }}</h5>
+                <p class="card-text">{{ comment.content }}</p>
+                <p class="card-subtitle mb-2 text-muted" style="font-size: small; text-align: end;">{{ comment.time }}</p>
+            </div>
+        </div></p>
+        {% endfor %}
+
+        {% if isActive and user.is_authenticated and not isCreator %}
+        <p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ commentForm.as_p }}
+                <input class="btn btn-primary" name="submit" type="submit" value="Post">
+            </form>
+        </p>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

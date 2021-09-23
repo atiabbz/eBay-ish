@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Bids
+{% endblock %}
+
+{% block body %}
+<p>
+<h2>Bids</h2>
+</p>
+
+{% for bid in bids %}
+<p>
+<div class="card">
+    <p><img style="max-width: 25%; margin: 1%;" class="card-img-top" src="{{ bid.listing.imageURL }}"
+            alt="Image for {{ bid.listing.title }}"></p>
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{% url 'listing' title=bid.listing.title listing_id=bid.listing.id %}">
+                {{ bid.listing.title }}
+            </a>
+        </h5>
+        <p class="text-muted" style="font-size: small;">
+            {% if bid.listing.category %}
+            <i>{{ bid.listing.category|capfirst }}</i>
+            {% else %}
+            <i>Uncategorized</i>
+            {% endif %}
+        </p>
+        <p class="card-text">
+            {{ bid.listing.description }}
+        </p>
+        <p>
+            <b>${{ bid.listing.price }}</b>
+        </p>
+        <p class="text-muted" style="font-size: x-small;">
+            Listed by: {{ bid.listing.creator }}
+        </p>
+    </div>
+</div>
+</p>
+{% endfor %}
+{% endblock %}
